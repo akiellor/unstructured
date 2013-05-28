@@ -2,6 +2,7 @@ package unstructured;
 
 import com.google.common.base.Function;
 import com.google.common.collect.ImmutableMap;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -59,5 +60,25 @@ public class UnstructuredTest {
         exception.expectMessage("Unstructured has no value for key: 'foo'");
 
         new Unstructured().map("foo", mock(Function.class));
+    }
+
+    @Test
+    @Ignore
+    public void shouldYieldANestedField() {
+        Unstructured unstructured = new Unstructured(ImmutableMap.<String, Object>builder()
+                .put("foo", ImmutableMap.of("bar", 7))
+                .build());
+
+        Unstructured actual = unstructured.map("foo.bar", new Function<Integer, Integer>(){
+            @Override public Integer apply(Integer integer) {
+                return integer + 1;
+            }
+        });
+
+        Unstructured expected = new Unstructured(ImmutableMap.<String, Object>builder()
+                .put("foo", ImmutableMap.of("bar", 8))
+                .build());
+
+        assertThat(actual, equalTo(expected));
     }
 }

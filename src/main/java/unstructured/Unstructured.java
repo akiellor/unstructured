@@ -9,31 +9,27 @@ import java.util.Map;
 import static com.google.common.base.Preconditions.checkArgument;
 
 public class Unstructured {
-    private final ImmutableMap<String, Object> data;
+    private final AddressableObjectTree tree;
 
     public Unstructured() {
         this(Maps.<String, Object>newHashMap());
     }
 
     public Unstructured(Map<String, Object> data) {
-        this.data = ImmutableMap.copyOf(data);
+        this.tree = new AddressableObjectTree(ImmutableMap.copyOf(data));
+    }
+
+    private Unstructured(AddressableObjectTree tree){
+        this.tree = tree;
     }
 
     public <T> Unstructured map(String replaceKey, Function<T, T> function) {
         checkArgument(
-                data.containsKey(replaceKey), "Unstructured has no value for key: '%s'", replaceKey);
+                tree.hasKey(replaceKey), "Unstructured has no value for key: '%s'", replaceKey);
 
-        ImmutableMap.Builder<String, Object> builder = ImmutableMap.<String, Object>builder()
-                .put(replaceKey, function.apply((T) data.get(replaceKey)));
+        AddressableObjectTree tree = this.tree.put(replaceKey, function.apply((T) this.tree.get(replaceKey)));
 
-        for(String key : data.keySet()){
-            if(key.equals(replaceKey)){
-                continue;
-            }
-            builder.put(key, data.get(key));
-        }
-
-        return new Unstructured(builder.build());
+        return new Unstructured(tree);
     }
 
     @Override
@@ -43,13 +39,13 @@ public class Unstructured {
 
         Unstructured that = (Unstructured) o;
 
-        if (data != null ? !data.equals(that.data) : that.data != null) return false;
+        if (tree != null ? !tree.equals(that.tree) : that.tree != null) return false;
 
         return true;
     }
 
     @Override
     public int hashCode() {
-        return data != null ? data.hashCode() : 0;
+        return tree != null ? tree.hashCode() : 0;
     }
 }
