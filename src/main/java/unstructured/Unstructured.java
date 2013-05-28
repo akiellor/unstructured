@@ -2,17 +2,27 @@ package unstructured;
 
 import com.google.common.base.Function;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Maps;
 
 import java.util.Map;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 public class Unstructured {
     private final ImmutableMap<String, Object> data;
+
+    public Unstructured() {
+        this(Maps.<String, Object>newHashMap());
+    }
 
     public Unstructured(Map<String, Object> data) {
         this.data = ImmutableMap.copyOf(data);
     }
 
     public <T> Unstructured map(String replaceKey, Function<T, T> function) {
+        checkArgument(
+                data.containsKey(replaceKey), "Unstructured has no value for key: '%s'", replaceKey);
+
         ImmutableMap.Builder<String, Object> builder = ImmutableMap.<String, Object>builder()
                 .put(replaceKey, function.apply((T) data.get(replaceKey)));
 

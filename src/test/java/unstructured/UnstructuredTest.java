@@ -2,12 +2,17 @@ package unstructured;
 
 import com.google.common.base.Function;
 import com.google.common.collect.ImmutableMap;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.mock;
 
 public class UnstructuredTest {
+    @Rule public ExpectedException exception = ExpectedException.none();
+
     @Test
     public void shouldReplaceExistingKeyValueWithNewValue() {
         Unstructured unstructured = new Unstructured(ImmutableMap.<String, Object>builder()
@@ -46,5 +51,13 @@ public class UnstructuredTest {
                 .build());
 
         assertThat(actual, equalTo(expected));
+    }
+
+    @Test
+    public void shouldThrowIllegalArgumentExceptionForInvalidKey() {
+        exception.expect(IllegalArgumentException.class);
+        exception.expectMessage("Unstructured has no value for key: 'foo'");
+
+        new Unstructured().map("foo", mock(Function.class));
     }
 }
