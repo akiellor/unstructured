@@ -11,7 +11,7 @@ import static org.junit.Assert.assertTrue;
 public class AddressableObjectTreeTest {
     @Test
     public void shouldGetValue() {
-        AddressableObjectTree tree = new AddressableObjectTree(ImmutableMap.<String, Object>of("foo", 1));
+        AddressableObjectTree tree = new AddressableObjectTree(ImmutableMap.<Object, Object>of("foo", 1));
 
         Integer value = tree.get("foo");
 
@@ -20,36 +20,36 @@ public class AddressableObjectTreeTest {
 
     @Test
     public void shouldPutValue() {
-        AddressableObjectTree tree = new AddressableObjectTree(ImmutableMap.<String, Object>of("foo", 1));
+        AddressableObjectTree tree = new AddressableObjectTree(ImmutableMap.<Object, Object>of("foo", 1));
 
         AddressableObjectTree actual = tree.put("foo", 2);
 
-        AddressableObjectTree expected = new AddressableObjectTree(ImmutableMap.<String, Object>of("foo", 2));
+        AddressableObjectTree expected = new AddressableObjectTree(ImmutableMap.<Object, Object>of("foo", 2));
 
         assertThat(actual, equalTo(expected));
     }
 
     @Test
     public void shouldRetainOtherValuesWhenPutValue() {
-        AddressableObjectTree tree = new AddressableObjectTree(ImmutableMap.<String, Object>of("foo", 1, "bar", 7));
+        AddressableObjectTree tree = new AddressableObjectTree(ImmutableMap.<Object, Object>of("foo", 1, "bar", 7));
 
         AddressableObjectTree actual = tree.put("foo", 2);
 
-        AddressableObjectTree expected = new AddressableObjectTree(ImmutableMap.<String, Object>of("foo", 2, "bar", 7));
+        AddressableObjectTree expected = new AddressableObjectTree(ImmutableMap.<Object, Object>of("foo", 2, "bar", 7));
 
         assertThat(actual, equalTo(expected));
     }
 
     @Test
     public void shouldHaveKeyWhenKeyPresent() {
-        AddressableObjectTree tree = new AddressableObjectTree(ImmutableMap.<String, Object>of("foo", 1));
+        AddressableObjectTree tree = new AddressableObjectTree(ImmutableMap.<Object, Object>of("foo", 1));
 
         assertTrue(tree.hasKey("foo"));
     }
 
     @Test
     public void shouldNotHaveKeyWhenKeyMissing() {
-        AddressableObjectTree tree = new AddressableObjectTree(ImmutableMap.<String, Object>of("foo", 1));
+        AddressableObjectTree tree = new AddressableObjectTree(ImmutableMap.<Object, Object>of("foo", 1));
 
         assertFalse(tree.hasKey("bar"));
     }

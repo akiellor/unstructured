@@ -12,10 +12,10 @@ public class Unstructured {
     private final AddressableObjectTree tree;
 
     public Unstructured() {
-        this(Maps.<String, Object>newHashMap());
+        this(Maps.<Object, Object>newHashMap());
     }
 
-    public Unstructured(Map<String, Object> data) {
+    public Unstructured(Map<Object, Object> data) {
         this.tree = new AddressableObjectTree(ImmutableMap.copyOf(data));
     }
 

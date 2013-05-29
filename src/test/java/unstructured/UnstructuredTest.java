@@ -16,7 +16,7 @@ public class UnstructuredTest {
 
     @Test
     public void shouldReplaceExistingKeyValueWithNewValue() {
-        Unstructured unstructured = new Unstructured(ImmutableMap.<String, Object>builder()
+        Unstructured unstructured = new Unstructured(ImmutableMap.<Object, Object>builder()
                 .put("foo", 1)
                 .build());
 
@@ -26,7 +26,7 @@ public class UnstructuredTest {
             }
         });
 
-        Unstructured expected = new Unstructured(ImmutableMap.<String, Object>builder()
+        Unstructured expected = new Unstructured(ImmutableMap.<Object, Object>builder()
             .put("foo", 2)
             .build());
 
@@ -35,7 +35,7 @@ public class UnstructuredTest {
 
     @Test
     public void shouldRetainOtherValuesWhenMapping() {
-        Unstructured unstructured = new Unstructured(ImmutableMap.<String, Object>builder()
+        Unstructured unstructured = new Unstructured(ImmutableMap.<Object, Object>builder()
                 .put("foo", 1)
                 .put("bar", 7)
                 .build());
@@ -46,7 +46,7 @@ public class UnstructuredTest {
             }
         });
 
-        Unstructured expected = new Unstructured(ImmutableMap.<String, Object>builder()
+        Unstructured expected = new Unstructured(ImmutableMap.<Object, Object>builder()
                 .put("foo", 2)
                 .put("bar", 7)
                 .build());
@@ -65,7 +65,7 @@ public class UnstructuredTest {
     @Test
     @Ignore
     public void shouldYieldANestedField() {
-        Unstructured unstructured = new Unstructured(ImmutableMap.<String, Object>builder()
+        Unstructured unstructured = new Unstructured(ImmutableMap.<Object, Object>builder()
                 .put("foo", ImmutableMap.of("bar", 7))
                 .build());
 
@@ -75,7 +75,7 @@ public class UnstructuredTest {
             }
         });
 
-        Unstructured expected = new Unstructured(ImmutableMap.<String, Object>builder()
+        Unstructured expected = new Unstructured(ImmutableMap.<Object, Object>builder()
                 .put("foo", ImmutableMap.of("bar", 8))
                 .build());
 

@@ -5,26 +5,18 @@ import com.google.common.collect.ImmutableMap;
 import java.util.Map;
 
 class AddressableObjectTree {
-    private final Map<String, Object> data;
+    private final ImmutableMap<Object, Object> data;
 
-    public AddressableObjectTree(Map<String, Object> data) {
+    public AddressableObjectTree(Map<Object, Object> data) {
         this.data = ImmutableMap.copyOf(data);
     }
 
-    public <T> T get(String key) {
+    public <T> T get(Object key) {
         return (T)data.get(key);
     }
 
-    public AddressableObjectTree put(String replaceKey, Object value) {
-        ImmutableMap.Builder<String, Object> builder = ImmutableMap.<String, Object>builder();
-        builder.put(replaceKey, value);
-        for(String key : data.keySet()){
-            if(key.equals(replaceKey)){
-                continue;
-            }
-            builder.put(key, data.get(key));
-        }
-        return new AddressableObjectTree(builder.build());
+    public AddressableObjectTree put(Object replaceKey, Object value) {
+        return new AddressableObjectTree(ImmutableMaps.merge(data, ImmutableMap.of(replaceKey, value)));
     }
 
     public boolean hasKey(String key) {
