@@ -8,6 +8,10 @@ import java.util.List;
 class Address implements Iterable<Object>{
     private final List<Object> parts;
 
+    public static Address parse(String addressString) {
+        return new Address(addressString.split("\\."));
+    }
+
     public Address(Iterable<Object> parts) {
         this.parts = ImmutableList.copyOf(parts);
     }

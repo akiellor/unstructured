@@ -30,6 +30,17 @@ public class AddressableObjectTreeTest {
     }
 
     @Test
+    public void shouldPutNestedValue() {
+        AddressableObjectTree tree = new AddressableObjectTree(ImmutableMap.<Object, Object>of());
+
+        AddressableObjectTree actual = tree.put(new Address("foo", "bar"), 2);
+
+        AddressableObjectTree expected = new AddressableObjectTree(ImmutableMap.<Object, Object>of("foo", ImmutableMap.of("bar", 2)));
+
+        assertThat(actual, equalTo(expected));
+    }
+
+    @Test
     public void shouldRetainOtherValuesWhenPutValue() {
         AddressableObjectTree tree = new AddressableObjectTree(ImmutableMap.<Object, Object>of("foo", 1, "bar", 7));
 

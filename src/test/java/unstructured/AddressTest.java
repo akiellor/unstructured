@@ -12,4 +12,9 @@ public class AddressTest {
 
         assertThat(child.parent(), equalTo(new Address("foo")));
     }
+
+    @Test
+    public void shouldParseDotSeparatedString() {
+        assertThat(Address.parse("foo.bar"), equalTo(new Address("foo", "bar")));
+    }
 }

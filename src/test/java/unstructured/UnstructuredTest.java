@@ -2,7 +2,6 @@ package unstructured;
 
 import com.google.common.base.Function;
 import com.google.common.collect.ImmutableMap;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -63,7 +62,6 @@ public class UnstructuredTest {
     }
 
     @Test
-    @Ignore
     public void shouldYieldANestedField() {
         Unstructured unstructured = new Unstructured(ImmutableMap.<Object, Object>builder()
                 .put("foo", ImmutableMap.of("bar", 7))

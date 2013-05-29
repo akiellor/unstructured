@@ -24,10 +24,11 @@ public class Unstructured {
     }
 
     public <T> Unstructured map(String replaceKey, Function<T, T> function) {
+        Address address = Address.parse(replaceKey);
         checkArgument(
-                tree.hasKey(new Address(replaceKey)), "Unstructured has no value for key: '%s'", replaceKey);
+                tree.hasKey(address), "Unstructured has no value for key: '%s'", address);
 
-        AddressableObjectTree tree = this.tree.put(new Address(replaceKey), function.apply((T) this.tree.get(new Address(replaceKey))));
+        AddressableObjectTree tree = this.tree.put(address, function.apply((T) this.tree.get(address)));
 
         return new Unstructured(tree);
     }
@@ -47,5 +48,12 @@ public class Unstructured {
     @Override
     public int hashCode() {
         return tree != null ? tree.hashCode() : 0;
+    }
+
+    @Override public String toString() {
+        final StringBuilder sb = new StringBuilder("Unstructured{");
+        sb.append("tree=").append(tree);
+        sb.append('}');
+        return sb.toString();
     }
 }
