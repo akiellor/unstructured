@@ -23,7 +23,7 @@ class AddressableObjectTree {
     }
 
     public AddressableObjectTree put(Address address, Object value) {
-        ImmutableMap<Object, Object> change = ImmutableMap.of((Object)Iterables.getLast(address), value);
+        ImmutableMap<Object, Object> change = ImmutableMap.of(Iterables.getLast(address), value);
         List<Object> keys = Lists.reverse(Lists.newArrayList(address));
         for(Object key : keys.subList(0, keys.size() - 1)){
             change = ImmutableMap.<Object, Object>of(key, change);
