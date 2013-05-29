@@ -1,13 +1,10 @@
-apply plugin: 'java'
-apply plugin: 'idea'
+subprojects {
+        apply plugin: 'java'
+                apply plugin: 'idea'
 
-repositories {
-  flatDir { dirs 'vendor' }
+                repositories {
+                        mavenCentral()
+                }
+
 }
 
-dependencies {
-  compile name: 'guava-14.0.1'
-  testCompile name: 'junit-4.11'
-  testCompile name: 'hamcrest-all-1.3'
-  testCompile name: 'mockito-all-1.9.5'
-}
