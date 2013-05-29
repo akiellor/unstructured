@@ -26,7 +26,7 @@ public class Unstructured {
     public <T> Unstructured map(String replaceKey, Function<T, T> function) {
         Address address = Address.parse(replaceKey);
         checkArgument(
-                tree.hasKey(address), "Unstructured has no value for key: '%s'", address);
+                tree.hasKey(address), "Unstructured has no value for key: '%s'", replaceKey);
 
         AddressableObjectTree tree = this.tree.put(address, function.apply((T) this.tree.get(address)));
 
