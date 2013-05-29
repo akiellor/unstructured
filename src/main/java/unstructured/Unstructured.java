@@ -27,7 +27,7 @@ public class Unstructured {
         checkArgument(
                 tree.hasKey(replaceKey), "Unstructured has no value for key: '%s'", replaceKey);
 
-        AddressableObjectTree tree = this.tree.put(replaceKey, function.apply((T) this.tree.get(replaceKey)));
+        AddressableObjectTree tree = this.tree.put(new Address(replaceKey), function.apply((T) this.tree.get(new Address(replaceKey))));
 
         return new Unstructured(tree);
     }

@@ -13,7 +13,7 @@ public class AddressableObjectTreeTest {
     public void shouldGetValue() {
         AddressableObjectTree tree = new AddressableObjectTree(ImmutableMap.<Object, Object>of("foo", 1));
 
-        Integer value = tree.get("foo");
+        Integer value = tree.get(new Address("foo"));
 
         assertThat(value, equalTo(1));
     }
@@ -22,7 +22,7 @@ public class AddressableObjectTreeTest {
     public void shouldPutValue() {
         AddressableObjectTree tree = new AddressableObjectTree(ImmutableMap.<Object, Object>of("foo", 1));
 
-        AddressableObjectTree actual = tree.put("foo", 2);
+        AddressableObjectTree actual = tree.put(new Address("foo"), 2);
 
         AddressableObjectTree expected = new AddressableObjectTree(ImmutableMap.<Object, Object>of("foo", 2));
 
@@ -33,7 +33,7 @@ public class AddressableObjectTreeTest {
     public void shouldRetainOtherValuesWhenPutValue() {
         AddressableObjectTree tree = new AddressableObjectTree(ImmutableMap.<Object, Object>of("foo", 1, "bar", 7));
 
-        AddressableObjectTree actual = tree.put("foo", 2);
+        AddressableObjectTree actual = tree.put(new Address("foo"), 2);
 
         AddressableObjectTree expected = new AddressableObjectTree(ImmutableMap.<Object, Object>of("foo", 2, "bar", 7));
 

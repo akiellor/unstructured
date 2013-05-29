@@ -1,7 +1,10 @@
 package unstructured;
 
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
 
+import java.util.List;
 import java.util.Map;
 
 class AddressableObjectTree {
@@ -11,12 +14,21 @@ class AddressableObjectTree {
         this.data = ImmutableMap.copyOf(data);
     }
 
-    public <T> T get(Object key) {
-        return (T)data.get(key);
+    public <T> T get(Address address) {
+        Object result = data;
+        for(Object part : address){
+            result = ((Map<String, Object>)result).get(part);
+        }
+        return (T)result;
     }
 
-    public AddressableObjectTree put(Object replaceKey, Object value) {
-        return new AddressableObjectTree(ImmutableMaps.merge(data, ImmutableMap.of(replaceKey, value)));
+    public AddressableObjectTree put(Address address, Object value) {
+        ImmutableMap<Object, Object> change = ImmutableMap.of((Object)Iterables.getLast(address), value);
+        List<Object> keys = Lists.reverse(Lists.newArrayList(address));
+        for(Object key : keys.subList(0, keys.size() - 1)){
+            change = ImmutableMap.<Object, Object>of(key, change);
+        }
+        return new AddressableObjectTree(ImmutableMaps.merge(data, change));
     }
 
     public boolean hasKey(String key) {
@@ -38,5 +50,12 @@ class AddressableObjectTree {
     @Override
     public int hashCode() {
         return data != null ? data.hashCode() : 0;
+    }
+
+    @Override public String toString() {
+        final StringBuilder sb = new StringBuilder("AddressableObjectTree{");
+        sb.append("data=").append(data);
+        sb.append('}');
+        return sb.toString();
     }
 }
