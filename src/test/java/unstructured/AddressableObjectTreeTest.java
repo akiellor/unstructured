@@ -44,13 +44,20 @@ public class AddressableObjectTreeTest {
     public void shouldHaveKeyWhenKeyPresent() {
         AddressableObjectTree tree = new AddressableObjectTree(ImmutableMap.<Object, Object>of("foo", 1));
 
-        assertTrue(tree.hasKey("foo"));
+        assertTrue(tree.hasKey(new Address("foo")));
+    }
+
+    @Test
+    public void shouldHaveNestedKeyWhenKeyPresent() {
+        AddressableObjectTree tree = new AddressableObjectTree(ImmutableMap.<Object, Object>of("foo", ImmutableMap.of("bar", 7)));
+
+        assertTrue(tree.hasKey(new Address("foo", "bar")));
     }
 
     @Test
     public void shouldNotHaveKeyWhenKeyMissing() {
         AddressableObjectTree tree = new AddressableObjectTree(ImmutableMap.<Object, Object>of("foo", 1));
 
-        assertFalse(tree.hasKey("bar"));
+        assertFalse(tree.hasKey(new Address("bar")));
     }
 }

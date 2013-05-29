@@ -31,8 +31,12 @@ class AddressableObjectTree {
         return new AddressableObjectTree(ImmutableMaps.merge(data, change));
     }
 
-    public boolean hasKey(String key) {
-        return data.containsKey(key);
+    public boolean hasKey(Address address) {
+        Object current = data;
+        for(Object key : address){
+            current = ((ImmutableMap<Object, Object>)current).get(key);
+        }
+        return current != null;
     }
 
     @Override
