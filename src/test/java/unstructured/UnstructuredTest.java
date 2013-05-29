@@ -79,4 +79,24 @@ public class UnstructuredTest {
 
         assertThat(actual, equalTo(expected));
     }
+
+    @Test
+    public void shouldPerformTypeConversionAndOperation() {
+        BasicConverter converter = new BasicConverter();
+        Unstructured unstructured = new Unstructured(ImmutableMap.<Object, Object>builder()
+                .put("foo", ImmutableMap.of("bar", "7"))
+                .build());
+
+        Unstructured actual = unstructured.map("foo.bar", converter.apply(new Function<Integer, Integer>(){
+            @Override public Integer apply(Integer integer) {
+                return integer + 1;
+            }
+        }, Integer.class));
+
+        Unstructured expected = new Unstructured(ImmutableMap.<Object, Object>builder()
+                .put("foo", ImmutableMap.of("bar", "8"))
+                .build());
+
+        assertThat(actual, equalTo(expected));
+    }
 }
