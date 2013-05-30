@@ -99,4 +99,22 @@ public class UnstructuredTest {
 
         assertThat(actual, equalTo(expected));
     }
+
+    @Test
+    public void shouldGetValue() {
+        Unstructured unstructured = new Unstructured(ImmutableMap.<Object, Object>builder()
+                .put("foo", ImmutableMap.of("bar", "7"))
+                .build());
+
+        assertThat(unstructured.<ImmutableMap>get("foo"), equalTo(ImmutableMap.of("bar", "7")));
+    }
+
+    @Test
+    public void shouldMergeTwoUnstructured() {
+        Unstructured one = new Unstructured(ImmutableMap.<Object, Object>of("foo", ImmutableMap.of("bar", 1), "baz", 9));
+        Unstructured two = new Unstructured(ImmutableMap.<Object, Object>of("foo", ImmutableMap.of("bar", 7)));
+
+        assertThat(one.merge(two), equalTo(
+                new Unstructured(ImmutableMap.<Object, Object>of("foo", ImmutableMap.of("bar", 7), "baz", 9))));
+    }
 }

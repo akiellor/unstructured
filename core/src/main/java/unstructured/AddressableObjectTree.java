@@ -39,6 +39,14 @@ class AddressableObjectTree {
         return current != null;
     }
 
+    public AddressableObjectTree merge(AddressableObjectTree tree) {
+        return new AddressableObjectTree(ImmutableMaps.merge(data, tree.data));
+    }
+
+    public Map<Object,Object> asMap() {
+        return data;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

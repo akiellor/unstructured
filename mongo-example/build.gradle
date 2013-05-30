@@ -1,0 +1,13 @@
+apply plugin: 'application'
+
+mainClassName = 'unstructured.example.OrderService'
+
+dependencies {
+  compile project(':core')
+  compile group: 'com.yammer.dropwizard', name: 'dropwizard-core', version: '0.6.2'
+  compile 'org.mongodb:mongo-java-driver:2.11.1'
+}
+
+run {
+  args 'server', 'configuration.yml'
+}

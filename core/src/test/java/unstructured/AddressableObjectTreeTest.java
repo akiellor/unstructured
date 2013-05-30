@@ -71,4 +71,17 @@ public class AddressableObjectTreeTest {
 
         assertFalse(tree.hasKey(new Address("bar")));
     }
+
+    @Test
+    public void shouldMergeTwoTrees() {
+        AddressableObjectTree one = new AddressableObjectTree(ImmutableMap.<Object, Object>of("foo", 1, "bar", 7));
+        AddressableObjectTree two = new AddressableObjectTree(ImmutableMap.<Object, Object>of("foo", 7));
+
+        AddressableObjectTree actual = one.merge(two);
+
+        AddressableObjectTree expected = new AddressableObjectTree(ImmutableMap.<Object, Object>of("foo", 7, "bar", 7));
+
+        assertThat(actual, equalTo(expected));
+    }
+
 }

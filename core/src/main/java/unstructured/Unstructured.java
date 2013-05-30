@@ -33,6 +33,18 @@ public class Unstructured {
         return new Unstructured(tree);
     }
 
+    public <T> T get(Object key) {
+        return tree.get(new Address(key));
+    }
+
+    public Unstructured merge(Unstructured unstructured) {
+        return new Unstructured(tree.merge(unstructured.tree));
+    }
+
+    public Map<Object,Object> asMap() {
+        return tree.asMap();
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
