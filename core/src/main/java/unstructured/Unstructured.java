@@ -5,6 +5,7 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -86,6 +87,10 @@ public class Unstructured {
             builder.put(address, objects.get(address));
         }
         return new Unstructured(builder.build());
+    }
+
+    public Unstructured reject(Iterable<Address> addresses) {
+        return constrain(Sets.difference(objects.keySet(), Sets.newHashSet(addresses)));
     }
 
     public Map<Object,Object> asMap() {

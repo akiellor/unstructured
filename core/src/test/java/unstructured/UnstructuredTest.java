@@ -129,6 +129,15 @@ public class UnstructuredTest {
     }
 
     @Test
+    public void shouldRejectValuesOfUnstructured() {
+        Unstructured input = new Unstructured(ImmutableMap.<Object, Object>of("foo", 1, "baz", 9));
+
+        Unstructured actual = input.reject(Lists.<Address>newArrayList(Address.parse("foo")));
+
+        assertThat(actual, equalTo(new Unstructured(ImmutableMap.<Object, Object>of("baz", 9))));
+    }
+
+    @Test
     public void shouldAllowQueryingForPathsWithWildcard() {
         Unstructured input = new Unstructured(ImmutableMap.<Object, Object>of("foo", 1, "baz", 9));
 

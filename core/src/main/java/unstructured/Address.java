@@ -7,7 +7,7 @@ import com.google.common.collect.ImmutableList;
 import java.util.Iterator;
 import java.util.List;
 
-class Address implements Iterable<Object>{
+public class Address implements Iterable<Object>{
     private final List<Object> parts;
 
     public static Address parse(String addressString) {
