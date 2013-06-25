@@ -1,1 +1,1 @@
-include('core', 'mongo-example')
+include('core', 'example')
