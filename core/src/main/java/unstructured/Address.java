@@ -1,5 +1,6 @@
 package unstructured;
 
+import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 
 import java.util.Iterator;
@@ -26,6 +27,21 @@ class Address implements Iterable<Object>{
 
     public Address parent() {
         return new Address(parts.subList(0, parts.size() - 1));
+    }
+
+    public Address push(Object key) {
+        return new Address(ImmutableList.builder().addAll(parts).add(key).build());
+    }
+
+    public boolean isAncestorOf(Address input) {
+        if(input.parts.size() <= parts.size()) { return false; }
+        return this.equals(new Address(input.parts.subList(0, Math.min(input.parts.size(), parts.size()))));
+    }
+
+    public Address relativeTo(Address parent) {
+        if(parent.equals(this)) { return new Address(); }
+        Preconditions.checkArgument(parent.isAncestorOf(this));
+        return new Address(this.parts.subList(parent.parts.size(), this.parts.size()));
     }
 
     @Override

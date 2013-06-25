@@ -1,55 +1,98 @@
 package unstructured;
 
 import com.google.common.base.Function;
+import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Maps;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
 public class Unstructured {
-    private final AddressableObjectTree tree;
+    private final ImmutableMap<Address, Object> objects;
 
     public Unstructured() {
         this(Maps.<Object, Object>newHashMap());
     }
 
     public Unstructured(Map<Object, Object> data) {
-        this.tree = new AddressableObjectTree(ImmutableMap.copyOf(data));
+        this(flatten(ImmutableMap.copyOf(data)));
     }
 
-    private Unstructured(AddressableObjectTree tree){
-        this.tree = tree;
+    public Unstructured(ImmutableMap<Address, Object> objects) {
+        this.objects = objects;
+    }
+
+    private static ImmutableMap<Address, Object> flatten(Object tree) {
+        Map<Address, Object> work = Maps.newHashMap(ImmutableMap.of(new Address(), tree));
+        ImmutableMap.Builder<Address, Object> leaves = ImmutableMap.builder();
+        while(!work.isEmpty()){
+            Address next = work.keySet().iterator().next();
+            Object maybeLeaf = work.remove(next);
+            if(maybeLeaf instanceof Map){
+                for(Map.Entry<Object, Object> entry : ((Map<Object, Object>) maybeLeaf).entrySet()){
+                    work.put(next.push(entry.getKey()), entry.getValue());
+                }
+            }else{
+                leaves.put(next, maybeLeaf);
+            }
+        }
+        return leaves.build();
     }
 
     public <T> Unstructured map(String replaceKey, Function<T, T> function) {
-        Address address = Address.parse(replaceKey);
+        final Address address = Address.parse(replaceKey);
         checkArgument(
-                tree.hasKey(address), "Unstructured has no value for key: '%s'", replaceKey);
+                objects.containsKey(address), "Unstructured has no value for key: '%s'", replaceKey);
 
-        AddressableObjectTree tree = this.tree.put(address, function.apply((T) this.tree.get(address)));
+        HashMap<Address, Object> map = Maps.newHashMap();
+        map.putAll(objects);
+        map.put(address, function.apply((T) objects.get(address)));
 
-        return new Unstructured(tree);
+        return new Unstructured(ImmutableMap.copyOf(map));
     }
 
     public <T> T get(Object key) {
-        return tree.get(new Address(key));
+        final Address parent = new Address(key);
+        if(objects.containsKey(parent)){
+            return (T) objects.get(parent);
+        }else{
+            Iterable<Address> children = Iterables.filter(objects.keySet(), new Predicate<Address>() {
+                @Override public boolean apply(Address input) {
+                    return parent.isAncestorOf(input);
+                }
+            });
+            AddressableObjectTree tree = new AddressableObjectTree(ImmutableMap.of());
+            for(Address address : children){
+                tree = tree.put(address.relativeTo(parent), objects.get(address));
+            }
+            return (T) tree.asMap();
+        }
     }
 
     public Unstructured merge(Unstructured unstructured) {
-        return new Unstructured(tree.merge(unstructured.tree));
+        HashMap<Address, Object> map = Maps.newHashMap();
+        map.putAll(objects);
+        map.putAll(unstructured.objects);
+        return new Unstructured(ImmutableMap.copyOf(map));
     }
 
     public Unstructured constrain(Iterable<Address> addresses){
-        Unstructured result = new Unstructured();
+        ImmutableMap.Builder<Address, Object> builder = ImmutableMap.builder();
         for(Address address : addresses){
-            result = new Unstructured(result.tree.put(address, tree.get(address)));
+            builder.put(address, objects.get(address));
         }
-        return result;
+        return new Unstructured(builder.build());
     }
 
     public Map<Object,Object> asMap() {
+        AddressableObjectTree tree = new AddressableObjectTree(ImmutableMap.of());
+        for(Map.Entry<Address, Object> entry : objects.entrySet()){
+            tree = tree.put(entry.getKey(), entry.getValue());
+        }
         return tree.asMap();
     }
 
@@ -60,20 +103,21 @@ public class Unstructured {
 
         Unstructured that = (Unstructured) o;
 
-        if (tree != null ? !tree.equals(that.tree) : that.tree != null) return false;
+        if (objects != null ? !objects.equals(that.objects) : that.objects != null) return false;
 
         return true;
     }
 
     @Override
     public int hashCode() {
-        return tree != null ? tree.hashCode() : 0;
+        return objects != null ? objects.hashCode() : 0;
     }
 
     @Override public String toString() {
         final StringBuilder sb = new StringBuilder("Unstructured{");
-        sb.append("tree=").append(tree);
+        sb.append("objects=").append(objects);
         sb.append('}');
         return sb.toString();
     }
+
 }
