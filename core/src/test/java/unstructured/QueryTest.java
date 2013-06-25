@@ -22,7 +22,14 @@ public class QueryTest {
     public void shouldMatchFullNestedPathsWithWildCard() {
         assertTrue(Query.of("foo.*").apply(new Address("foo.bar")));
         assertTrue(Query.of("foo.*").apply(new Address("foo.baz")));
-        assertTrue(Query.of("*").apply(new Address("foo.baz")));
+        assertTrue(Query.of("*").apply(new Address("foo")));
         assertFalse(Query.of("bar.*").apply(new Address("foo.baz")));
+        assertFalse(Query.of("*").apply(new Address("foo.baz")));
+    }
+
+    @Test
+    public void shouldMatchPathsWithWildCardMidPath() {
+        assertTrue(Query.of("foo.*.bar").apply(new Address("foo.1.bar")));
+        assertFalse(Query.of("foo.*.baz").apply(new Address("foo.bar.baz.qux")));
     }
 }

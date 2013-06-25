@@ -6,7 +6,7 @@ public class Query implements Predicate<Address>{
     private final String query;
 
     private Query(String query) {
-        this.query = String.format("^%s$", query.replaceAll("\\.", "\\.").replaceAll("\\*", ".*?"));
+        this.query = String.format("^%s$", query.replaceAll("\\.", "\\.").replaceAll("\\*", "[^\\.]+"));
     }
 
     public static Query of(String queryString) {
