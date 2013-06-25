@@ -96,6 +96,14 @@ public class Unstructured {
         return tree.asMap();
     }
 
+    public Unstructured query(final Query query) {
+        return new Unstructured(ImmutableMap.copyOf(Maps.filterEntries(objects, new Predicate<Map.Entry<Address, Object>>() {
+            @Override public boolean apply(Map.Entry<Address, Object> input) {
+                return query.apply(input.getKey());
+            }
+        })));
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -119,5 +127,4 @@ public class Unstructured {
         sb.append('}');
         return sb.toString();
     }
-
 }

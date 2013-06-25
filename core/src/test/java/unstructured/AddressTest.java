@@ -50,4 +50,11 @@ public class AddressTest {
 
         new Address("foo").relativeTo(new Address("bar"));
     }
+
+    @Test
+    public void shouldFormatToPath() {
+        assertThat(new Address().path(), equalTo(""));
+        assertThat(new Address("foo").path(), equalTo("foo"));
+        assertThat(new Address("foo", "bar").path(), equalTo("foo.bar"));
+    }
 }

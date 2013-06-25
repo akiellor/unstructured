@@ -1,5 +1,6 @@
 package unstructured;
 
+import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 
@@ -42,6 +43,10 @@ class Address implements Iterable<Object>{
         if(parent.equals(this)) { return new Address(); }
         Preconditions.checkArgument(parent.isAncestorOf(this));
         return new Address(this.parts.subList(parent.parts.size(), this.parts.size()));
+    }
+
+    public String path() {
+        return Joiner.on(".").join(parts);
     }
 
     @Override

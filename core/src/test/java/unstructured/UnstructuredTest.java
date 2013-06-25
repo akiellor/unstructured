@@ -127,4 +127,22 @@ public class UnstructuredTest {
 
         assertThat(actual, equalTo(new Unstructured(ImmutableMap.<Object, Object>of("foo", 1))));
     }
+
+    @Test
+    public void shouldAllowQueryingForPathsWithWildcard() {
+        Unstructured input = new Unstructured(ImmutableMap.<Object, Object>of("foo", 1, "baz", 9));
+
+        Unstructured actual = input.query(Query.of("*"));
+
+        assertThat(actual, equalTo(new Unstructured(ImmutableMap.<Object, Object>of("foo", 1, "baz", 9))));
+    }
+
+    @Test
+    public void shouldRestrictPathsNotMatchedByWildcard() {
+        Unstructured input = new Unstructured(ImmutableMap.<Object, Object>of("foo", 1, "bar", ImmutableMap.of("baz", 9)));
+
+        Unstructured actual = input.query(Query.of("bar.*"));
+
+        assertThat(actual, equalTo(new Unstructured(ImmutableMap.<Object, Object>of("bar", ImmutableMap.of("baz", 9)))));
+    }
 }
