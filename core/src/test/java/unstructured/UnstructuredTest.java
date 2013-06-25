@@ -2,6 +2,7 @@ package unstructured;
 
 import com.google.common.base.Function;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Lists;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -116,5 +117,14 @@ public class UnstructuredTest {
 
         assertThat(one.merge(two), equalTo(
                 new Unstructured(ImmutableMap.<Object, Object>of("foo", ImmutableMap.of("bar", 7), "baz", 9))));
+    }
+
+    @Test
+    public void shouldConstrainValuesOfUnstructured() {
+        Unstructured input = new Unstructured(ImmutableMap.<Object, Object>of("foo", 1, "baz", 9));
+
+        Unstructured actual = input.constrain(Lists.<Address>newArrayList(Address.parse("foo")));
+
+        assertThat(actual, equalTo(new Unstructured(ImmutableMap.<Object, Object>of("foo", 1))));
     }
 }

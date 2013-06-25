@@ -41,6 +41,14 @@ public class Unstructured {
         return new Unstructured(tree.merge(unstructured.tree));
     }
 
+    public Unstructured constrain(Iterable<Address> addresses){
+        Unstructured result = new Unstructured();
+        for(Address address : addresses){
+            result = new Unstructured(result.tree.put(address, tree.get(address)));
+        }
+        return result;
+    }
+
     public Map<Object,Object> asMap() {
         return tree.asMap();
     }
