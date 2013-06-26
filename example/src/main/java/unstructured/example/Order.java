@@ -1,11 +1,13 @@
 package unstructured.example;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.google.common.collect.Lists;
 import unstructured.Address;
 import unstructured.Unstructured;
 
+import java.util.ArrayList;
 import java.util.Map;
+
+import static com.google.common.collect.Lists.newArrayList;
 
 @JsonSerialize(using = OrderSerializer.class)
 public class Order{
@@ -20,8 +22,7 @@ public class Order{
     }
 
     public Order change(Unstructured changes) {
-        return state().change(changes.reject(Lists.<Address>newArrayList(
-                new Address("id"), new Address("buyer"), new Address("seller"))));
+        return state().change(changes);
     }
 
     private Status state(){
@@ -37,6 +38,11 @@ public class Order{
         Order change(Unstructured changes);
 
         class Default implements Status {
+            public static final ArrayList<Address> IMMUTABLE_FIELDS = newArrayList(
+                    new Address("id"),
+                    new Address("buyer"),
+                    new Address("seller"));
+
             private final Unstructured unstructured;
 
             public Default(Unstructured unstructured){
@@ -44,7 +50,7 @@ public class Order{
             }
 
             @Override public Order change(Unstructured changes) {
-                return new Order(unstructured.merge(changes));
+                return new Order(unstructured.merge(changes).reject(IMMUTABLE_FIELDS));
             }
         }
 
