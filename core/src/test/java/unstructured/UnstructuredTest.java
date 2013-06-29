@@ -107,7 +107,7 @@ public class UnstructuredTest {
                 .put("foo", ImmutableMap.of("bar", "7"))
                 .build());
 
-        assertThat(unstructured.<ImmutableMap>get("foo"), equalTo(ImmutableMap.of("bar", "7")));
+        assertThat(unstructured.<ImmutableMap<String, String>>get("foo"), equalTo(ImmutableMap.of("bar", "7")));
     }
 
     @Test
